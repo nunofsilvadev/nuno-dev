@@ -119,10 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
         duration: fadeInDuration,
         ease: 'power2.out',
         onComplete: () => {
+          const shadowFade = offColor.replace(/[\d.]+\)$/, '0)');
           gsap.to(el, {
             opacity: 0.18,
             color: offColor,
-            textShadow: 'none',
+            textShadow: `0 0 12px ${shadowFade}, 0 0 28px ${shadowFade}`,
             duration: fadeOutDuration,
             ease: 'power2.in',
             onComplete: () => {

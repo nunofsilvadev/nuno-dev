@@ -53,9 +53,9 @@ body {
 .tech-grid {
   display: grid;
   grid-template-columns: repeat(8, 200px);
-  grid-template-rows: repeat(5, 200px);
+  grid-template-rows: repeat(5, 100px);
   width: 1600px;
-  height: 1000px;
+  height: 500px;
   border: 1px solid rgba(212, 175, 55, 0.18);
   flex-shrink: 0;
 }
