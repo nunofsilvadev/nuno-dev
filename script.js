@@ -1,23 +1,54 @@
 /**
  * nuno.dev — GSAP animations
- * Subtle, professional entrance and ambient effects
+ * Grelha tech com palavras que pulsam aleatoriamente
  */
 
+const TECH_WORDS = [
+  'php', 'laravel', 'javascript', 'vue.js', 'react', 'flutter',
+  'MySQL', 'PostgreSQL', 'OpenAI', 'Claude', 'AWS', 'Forge',
+  'RabbitMQ', 'Liquibase', 'WordPress'
+];
+
+function shuffle(array) {
+  const a = [...array];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function createTechGrid() {
+  const grid = document.getElementById('tech-grid');
+  if (!grid) return;
+
+  const cols = 8;
+  const rows = 5;
+  const total = cols * rows;
+  const words = shuffle([...TECH_WORDS]);
+
+  for (let i = 0; i < total; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'tech-cell';
+    const word = document.createElement('span');
+    word.className = 'tech-word';
+    word.textContent = words[i % words.length];
+    cell.appendChild(word);
+    grid.appendChild(cell);
+  }
+}
+
+function randomBetween(min, max) {
+  return min + Math.random() * (max - min);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Respect reduced motion preference
+  createTechGrid();
+
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion) return;
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-  // Grid lines — subtle fade in (from 0 to CSS base opacity)
-  gsap.set('.grid-line', { opacity: 0 });
-  tl.to('.grid-line', {
-    opacity: 0.06,
-    duration: 1.2,
-    stagger: { each: 0.15, from: 'center' },
-    ease: 'power2.inOut'
-  }, 0);
 
   // Logo
   tl.from('.logo', {
@@ -26,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     duration: 0.8
   }, 0.2);
 
-  // Name — elegant reveal
+  // Name
   tl.from('.name', {
     opacity: 0,
     y: 24,
@@ -34,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ease: 'power3.out'
   }, 0.4);
 
-  // Tagline — staggered words
+  // Tagline
   tl.from('.tagline-word', {
     opacity: 0,
     y: 12,
@@ -62,14 +93,34 @@ document.addEventListener('DOMContentLoaded', () => {
     stagger: 0.08
   }, 1);
 
-  // Grid lines — very subtle breathing (ambient)
-  gsap.to('.grid-line', {
-    opacity: 0.08,
-    duration: 4,
-    ease: 'sine.inOut',
-    yoyo: true,
-    repeat: -1,
-    stagger: { each: 0.5 },
-    delay: 2.5
+  // Palavras tech — pulso aleatório (luz que liga/desliga)
+  const words = document.querySelectorAll('.tech-word');
+  words.forEach((el) => {
+    const delay = randomBetween(0, 4);
+    const duration = randomBetween(1.5, 3);
+    const pause = randomBetween(2, 6);
+
+    const pulse = () => {
+      gsap.to(el, {
+        opacity: randomBetween(0.12, 0.22),
+        color: 'rgba(212, 175, 55, 0.35)',
+        duration: duration * 0.4,
+        ease: 'power2.out',
+        onComplete: () => {
+          gsap.to(el, {
+            opacity: 0.04,
+            color: 'rgba(212, 175, 55, 0.15)',
+            duration: duration * 0.6,
+            ease: 'power2.in',
+            delay: randomBetween(0.5, 1.5),
+            onComplete: () => {
+              gsap.delayedCall(pause, pulse);
+            }
+          });
+        }
+      });
+    };
+
+    gsap.delayedCall(delay, pulse);
   });
 });
