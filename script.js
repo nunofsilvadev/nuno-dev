@@ -57,33 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
     duration: 0.8
   }, 0.2);
 
-  // Name
-  tl.from('.name', {
-    opacity: 0,
-    y: 24,
-    duration: 1,
-    ease: 'power3.out'
-  }, 0.4);
-
-  // Tagline
-  tl.from('.tagline-word', {
-    opacity: 0,
-    y: 12,
-    duration: 0.6,
-    stagger: 0.15
-  }, 0.7);
-
-  tl.from('.tagline-sep', {
-    opacity: 0,
-    duration: 0.4
-  }, 0.75);
-
   // CTA link
   tl.from('.link', {
     opacity: 0,
     y: 8,
     duration: 0.6
-  }, 0.9);
+  }, 0.4);
 
   // Footer nav
   tl.from('.nav-link', {
@@ -91,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     y: 8,
     duration: 0.5,
     stagger: 0.08
-  }, 1);
+  }, 0.5);
 
   // Palavras tech — pulso aleatório (luz que liga/desliga)
   const words = document.querySelectorAll('.tech-word');

@@ -124,33 +124,6 @@ body {
   gap: 1rem;
 }
 
-.name {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(4rem, 15vw, 8rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: #f5f2ee;
-}
-
-.tagline {
-  font-size: 0.9rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(212, 175, 55, 0.8);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
-.tagline-sep {
-  opacity: 0.4;
-  font-weight: 300;
-}
-
 .cta {
   margin-top: 0.5rem;
 }
