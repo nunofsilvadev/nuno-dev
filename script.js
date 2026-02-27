@@ -6,7 +6,12 @@
 const TECH_WORDS = [
   'php', 'laravel', 'javascript', 'vue.js', 'react', 'flutter',
   'MySQL', 'PostgreSQL', 'OpenAI', 'Claude', 'AWS', 'Forge',
-  'RabbitMQ', 'Liquibase', 'WordPress'
+  'RabbitMQ', 'Liquibase', 'WordPress',
+  'automação', 'CI/CD', 'DevOps', 'Kubernetes', 'Docker',
+  'API', 'GraphQL', 'REST', 'microserviços', 'serverless',
+  'MVP', 'agile', 'scrum', 'startup', 'scale-up',
+  'Vercel', 'Vite', 'TypeScript', 'Tailwind', 'Supabase',
+  'Stripe', 'Notion', 'Linear', 'Figma'
 ];
 
 function shuffle(array) {
@@ -40,6 +45,13 @@ function createTechGrid() {
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
+}
+
+function getRandomWord(currentWord) {
+  const others = TECH_WORDS.filter((w) => w !== currentWord);
+  return others.length > 0
+    ? others[Math.floor(Math.random() * others.length)]
+    : TECH_WORDS[Math.floor(Math.random() * TECH_WORDS.length)];
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -93,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: fadeOutDuration,
             ease: 'power2.in',
             onComplete: () => {
+              el.textContent = getRandomWord(el.textContent);
               gsap.delayedCall(pause, pulse);
             }
           });
