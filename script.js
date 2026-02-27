@@ -1,26 +1,42 @@
 /**
  * nuno.dev — GSAP animations
  * Grelha tech com palavras que pulsam aleatoriamente
+ * Cores por categoria: azul (linguagens), verde (infra/devops), amarelo (startup/ferramentas)
  */
 
-const TECH_WORDS = [
-  'php', 'laravel', 'javascript', 'vue.js', 'react', 'flutter',
-  'MySQL', 'PostgreSQL', 'OpenAI', 'Claude', 'AWS', 'Forge',
-  'RabbitMQ', 'Liquibase', 'WordPress',
-  'automação', 'CI/CD', 'DevOps', 'Kubernetes', 'Docker',
-  'API', 'GraphQL', 'REST', 'microserviços', 'serverless',
-  'MVP', 'agile', 'scrum', 'startup', 'scale-up',
-  'Vercel', 'Vite', 'TypeScript', 'Tailwind', 'Supabase',
-  'Stripe', 'Notion', 'Linear', 'Figma'
+const WORD_CATEGORIES = [
+  {
+    color: 'blue',
+    off: 'rgba(96, 165, 250, 0.12)',
+    on: 'rgba(96, 165, 250, 0.95)',
+    words: ['php', 'laravel', 'javascript', 'vue.js', 'react', 'flutter', 'TypeScript']
+  },
+  {
+    color: 'green',
+    off: 'rgba(74, 222, 128, 0.12)',
+    on: 'rgba(74, 222, 128, 0.95)',
+    words: ['MySQL', 'PostgreSQL', 'OpenAI', 'Claude', 'AWS', 'Forge', 'CI/CD', 'DevOps', 'Kubernetes', 'Docker', 'RabbitMQ', 'Liquibase', 'automação', 'API', 'GraphQL', 'REST', 'microserviços', 'serverless', 'Supabase']
+  },
+  {
+    color: 'yellow',
+    off: 'rgba(250, 204, 21, 0.12)',
+    on: 'rgba(250, 204, 21, 0.95)',
+    words: ['WordPress', 'MVP', 'agile', 'scrum', 'startup', 'scale-up', 'Vercel', 'Vite', 'Tailwind', 'Stripe', 'Notion', 'Linear', 'Figma']
+  }
 ];
 
-function shuffle(array) {
-  const a = [...array];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function getAllWords() {
+  return WORD_CATEGORIES.flatMap((c) => c.words);
+}
+
+function getRandomWordWithCategory(currentWord) {
+  const all = getAllWords();
+  const others = all.filter((w) => w !== currentWord);
+  const word = others.length > 0
+    ? others[Math.floor(Math.random() * others.length)]
+    : all[Math.floor(Math.random() * all.length)];
+  const category = WORD_CATEGORIES.find((c) => c.words.includes(word));
+  return { word, category };
 }
 
 function createTechGrid() {
@@ -30,14 +46,17 @@ function createTechGrid() {
   const cols = 8;
   const rows = 5;
   const total = cols * rows;
-  const words = shuffle([...TECH_WORDS]);
+  const all = getAllWords();
 
   for (let i = 0; i < total; i++) {
     const cell = document.createElement('div');
     cell.className = 'tech-cell';
     const word = document.createElement('span');
     word.className = 'tech-word';
-    word.textContent = words[i % words.length];
+    const { word: w, category } = getRandomWordWithCategory('');
+    word.textContent = w;
+    word.dataset.category = category?.color ?? 'yellow';
+    word.style.color = category?.off ?? 'rgba(250, 204, 21, 0.12)';
     cell.appendChild(word);
     grid.appendChild(cell);
   }
@@ -47,12 +66,6 @@ function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function getRandomWord(currentWord) {
-  const others = TECH_WORDS.filter((w) => w !== currentWord);
-  return others.length > 0
-    ? others[Math.floor(Math.random() * others.length)]
-    : TECH_WORDS[Math.floor(Math.random() * TECH_WORDS.length)];
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   createTechGrid();
@@ -84,28 +97,35 @@ document.addEventListener('DOMContentLoaded', () => {
     stagger: 0.08
   }, 0.5);
 
-  // Palavras tech — pulso aleatório (luz que liga/desliga)
+  // Palavras tech — pulso mais visível, cor por categoria
   const words = document.querySelectorAll('.tech-word');
   words.forEach((el) => {
     const delay = randomBetween(0, 4);
     const fadeInDuration = randomBetween(0.8, 1.5);
-    const fadeOutDuration = 5; // ~5s para desligar suavemente
+    const fadeOutDuration = 5;
     const pause = randomBetween(2, 5);
 
     const pulse = () => {
+      const { word: newWord, category } = getRandomWordWithCategory(el.textContent);
+      el.textContent = newWord;
+      const offColor = category?.off ?? 'rgba(250, 204, 21, 0.12)';
+      const onColor = category?.on ?? 'rgba(250, 204, 21, 0.95)';
+      el.dataset.category = category?.color ?? 'yellow';
+
       gsap.to(el, {
-        opacity: randomBetween(0.35, 0.55),
-        color: 'rgba(212, 175, 55, 0.7)',
+        opacity: 1,
+        color: onColor,
+        textShadow: '0 0 12px currentColor, 0 0 28px currentColor',
         duration: fadeInDuration,
         ease: 'power2.out',
         onComplete: () => {
           gsap.to(el, {
-            opacity: 0.04,
-            color: 'rgba(212, 175, 55, 0.15)',
+            opacity: 0.18,
+            color: offColor,
+            textShadow: 'none',
             duration: fadeOutDuration,
             ease: 'power2.in',
             onComplete: () => {
-              el.textContent = getRandomWord(el.textContent);
               gsap.delayedCall(pause, pulse);
             }
           });
