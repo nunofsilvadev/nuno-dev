@@ -97,22 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const words = document.querySelectorAll('.tech-word');
   words.forEach((el) => {
     const delay = randomBetween(0, 4);
-    const duration = randomBetween(1.5, 3);
-    const pause = randomBetween(2, 6);
+    const fadeInDuration = randomBetween(0.8, 1.5);
+    const fadeOutDuration = 5; // ~5s para desligar suavemente
+    const pause = randomBetween(2, 5);
 
     const pulse = () => {
       gsap.to(el, {
-        opacity: randomBetween(0.12, 0.22),
-        color: 'rgba(212, 175, 55, 0.35)',
-        duration: duration * 0.4,
+        opacity: randomBetween(0.35, 0.55),
+        color: 'rgba(212, 175, 55, 0.7)',
+        duration: fadeInDuration,
         ease: 'power2.out',
         onComplete: () => {
           gsap.to(el, {
             opacity: 0.04,
             color: 'rgba(212, 175, 55, 0.15)',
-            duration: duration * 0.6,
+            duration: fadeOutDuration,
             ease: 'power2.in',
-            delay: randomBetween(0.5, 1.5),
             onComplete: () => {
               gsap.delayedCall(pause, pulse);
             }
